@@ -19,5 +19,5 @@ router.routesConfig(app);
 
 app.listen(port, function () {
     console.log('app listening at port %s', port);
-    console.log('app endpoint %s', config.appEndpoint);
+    console.log('app endpoint %s:%s', config.appEndpoint, config.port);
 });

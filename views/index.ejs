@@ -113,6 +113,7 @@
 </head>
 
 <body>
+<h1><center><%= message %></center></h1>
 <div class="form-style-5">
 <form method="post" action="/new_client">
 <fieldset>
@@ -127,6 +128,7 @@
 <input type="text" name="contactName" placeholder="Contact Name">
 <input type="text" name="contactPhone" placeholder="Contact Phone Number">
 </fieldset>
+<input type="hidden" name="webForm" value="True" />
 <input type="submit" value="Apply" />
 </form>
 </div>
