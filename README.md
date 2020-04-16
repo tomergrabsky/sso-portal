@@ -22,7 +22,7 @@ Make sure to enable access from the host to your RHSSO server(s) by adding its h
 
 ## Configuration
 
-Edit the config file under config/env.config.js
+Edit the config file under config/prod.env.config.js
 The single important parameter is **sso_endpoints** 
 This parameter is in the form of an array of objects and should include the name and the full endpoint url for your RHSSO(s)
 
@@ -80,7 +80,10 @@ E.g:
       http://localhost:3200/new_client \
       -H 'content-type: application/json' \
       -d '{
-          "secret": "secret123!",
-          "redirectUris": ["https://www.example-application.com/oauth2/redirectUri-1", "https://www.example-application.com/oauth2/redirectUri-2"],
-          "name": "myClientName"
-            }'
+            "secret": "secret123!",
+            "redirectUris": ["https://www.example-application.com/oauth2/redirectUri-1", "https://www.example-application.com/oauth2/redirectUri-2"],
+            "name": "myApptName",
+            "id": "myClientId",
+            "contactName": "John Doe",
+            "contactPhone": "+1-070-9999-999"
+          }'

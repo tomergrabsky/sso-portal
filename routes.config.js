@@ -1,4 +1,3 @@
-const config = require('./config/env.config.js');
 const { clientValidationRules, validate } = require('./lib/validator.js')
 const send2multipleSSOs = require('./lib/multiple_sso')
 
@@ -13,9 +12,11 @@ exports.routesConfig = function (app) {
                  });
     app.post("/new_client", clientValidationRules(), validate, (req, res) => {
       const client = req.body;
-        client.redirectUris=client.redirectUris.replace(/(\r\n|\n|\r)/gm,"__@__").split("__@__");
-        console.log(client.redirectUris)
-        client.description={
+        //redirect uris recieved via web form are separated by new lines, this will convert it to an array of URIs
+        if (client.webForm) {
+            client.redirectUris = client.redirectUris.replace(/(\r\n|\n|\r)/gm, "__@__").split("__@__");
+        }
+        client.description={ //creating a JSON object from the contact details provided in the webform
         "contactName": client.contactName,
         "contactPhone": client.contactPhone
         };
@@ -29,28 +30,34 @@ exports.routesConfig = function (app) {
               "name": client.name
         };
         console.log();
-        console.log(req.body);
+        console.log('Recieved Webform: ' + body);
 
-//        Send to RHSSOs:
-        send2multipleSSOs.createClient(null, body,function(ssoResponses) {
-            message = "";
-            ssoResponses.forEach(function (ssoRes, index) {
-                if (client.webForm) {
-                    message += ssoRes.name + ": " + ssoRes.msg + " | ";
-                    if (ssoRes.code !== 201 && ssoRes.code !== 200) {
-                        message += " erro code: " + ssoRes.code + " | ";
-                    }
-                } else {
-                    console.log('This is API call')
-                }
-
-            });
-            if (client.webForm) {
-                res.render('index', { message:message});
-            } else {
-                res.status(201).json({
-                    message: "client created successfully | "
+//        Send to RHSSO(s):
+        send2multipleSSOs.createClient(null, body,function(error, ssoResponses) {
+        /*  example ssoResponses: [{"name": "sso-1","code": 200,"msg": "client created successfully"},{"name": "sso-2","code": 400,"msg": "Bad Request"}]   */
+            // process the respons(es) from RHSSO
+            if (error) {
+                console.log('error:' + error)
+            }
+            else {
+                let webMessage = "";
+                let apiResponseCode=201;
+                let apiMessage = "Clients created Successfully : ";
+                ssoResponses.forEach(function (ssoRes, index) {
+                        webMessage += ssoRes.name + ": " + ssoRes.msg + " | ";
+                        if (ssoRes.code !== 201 && ssoRes.code !== 200) {
+                            webMessage += " erro code: " + ssoRes.code + " | ";
+                            apiResponseCode = 400;
+                            apiMessage  = "One or more requests failed : ";
+                        }
                 });
+                if (client.webForm) { // request origination is from a web form
+                    res.render('index', {message: webMessage});
+                } else { //request origination is from a direct API call
+                    res.status(apiResponseCode).json({
+                        message: apiMessage + webMessage
+                    });
+                }
             }
         })
     });

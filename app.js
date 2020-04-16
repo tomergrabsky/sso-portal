@@ -1,9 +1,12 @@
-const config = require('./config/env.config.js');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-let path = require('path');
 
+let mode = process.env.MODE || "prod";
+console.log("Loading configuration file: ./config/" + mode + ".env.config.js" )
+const config = require('./config/' + mode + '.env.config.js');
+
+let path = require('path');
 const port = process.env.PORT || config.port || 3200;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -19,5 +22,5 @@ router.routesConfig(app);
 
 app.listen(port, function () {
     console.log('app listening at port %s', port);
-    console.log('app endpoint %s:%s', config.appEndpoint, config.port);
+    console.log('app endpoint %s:%s', config.appEndpoint, port);
 });
