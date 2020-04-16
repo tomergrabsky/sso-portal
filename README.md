@@ -70,9 +70,12 @@ Once completed the result of the request(s) will be displayed at the top the scr
     
 It is possible to send POST requests to /new_client providing application/json body with the following parameters:
     
-* secret - 5 charcters minimum
+* id - client ID
+* secret - 5 characters minimum
 * redirectUris - an array containing the redirect url (e.g: ["https://www.example-application.com/oauth2/redirectUri"])
 * name - application name
+* conntactName - contact point for this client
+* contactPhone - contact point for this client
 
 E.g:
     
@@ -87,3 +90,5 @@ E.g:
             "contactName": "John Doe",
             "contactPhone": "+1-070-9999-999"
           }'
+          
+Alternatively, these same parameters can be provided using a urlencoded POST request
