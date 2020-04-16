@@ -21,12 +21,12 @@ exports.routesConfig = function (app) {
         };
 
         body = {
-//              "client_id": client.id,
-              "client_secret": client.secret,
-              "redirect_uris": client.redirectUris,
-//              "client_description": JSON.stringify(client.description),
+             "clientId": client.id,
+              "secret": client.secret,
+              "redirectUris": client.redirectUris,
+             "description": JSON.stringify(client.description),
 //              "rootUrl": client.rootUrl,
-              "client_name": client.name
+              "name": client.name
         };
         console.log();
         console.log(req.body);
