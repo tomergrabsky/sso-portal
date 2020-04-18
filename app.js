@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 router.routesConfig(app);
 
+app.use(express.static(path.join(__dirname, 'views')));
 
 app.listen(port, function () {
     console.log('app listening at port %s', port);
